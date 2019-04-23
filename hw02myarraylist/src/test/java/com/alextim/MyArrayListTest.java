@@ -27,7 +27,20 @@ public class MyArrayListTest {
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> students.get(4));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> students.set(4, new Student("4")));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> students.remove(4));
+    }
 
+    @Test
+    public void getIllegalArgumentException() {
+        List<Student> students = new MyArrayList<>();
+        students.add(new Student("0"));
+        students.add(new Student("1"));
+        students.add(new Student("2"));
+        students.add(new Student("3"));
+
+        Assertions.assertThrows(NullPointerException.class, () -> students.add(null));
+        Assertions.assertThrows(NullPointerException.class, () -> students.add(1, null));
+        Assertions.assertThrows(NullPointerException.class, () -> students.set(2, null));
+        Assertions.assertThrows(NullPointerException.class, () -> students.remove(null));
     }
 
    @Test

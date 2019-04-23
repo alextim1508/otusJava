@@ -28,7 +28,7 @@ public class MyArrayListTask {
         boolean res = Collections.addAll(list, mas);
         Assertions.assertTrue(res);
 
-        for(int i =3; i<mas.length;i++)
+        for(int i =0; i<mas.length;i++)
             Assertions.assertEquals(mas[i], list.get(i+3));
     }
 

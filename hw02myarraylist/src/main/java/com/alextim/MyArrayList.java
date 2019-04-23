@@ -15,10 +15,10 @@ public class MyArrayList<E> implements List<E> {
     }
 
     public MyArrayList(int capacity) {
-        if(capacity > 0)
-            data = new Object[capacity];
-        else
+        if(capacity <= 0)
             throw new IllegalArgumentException("Illegal Capacity: " + capacity);
+
+        data = new Object[capacity];
     }
 
     @Override
@@ -32,20 +32,23 @@ public class MyArrayList<E> implements List<E> {
     }
 
     @Override
-    public boolean contains(Object o) {
-        return indexOf(o) != -1;
+    public boolean contains(Object element) {
+        Objects.requireNonNull(element);
+        return indexOf(element) != -1;
     }
 
     @Override
-    public boolean add(E e) {
+    public boolean add(E element) {
+        Objects.requireNonNull(element);
         ensureCapacity(size + 1);
 
-        data[size++] = e;
+        data[size++] = element;
         return true;
     }
 
     @Override
     public void add(int index, E element) {
+        Objects.requireNonNull(element);
         ensureCapacity(size + 1);
 
         System.arraycopy(data, index, data, index + 1, size - index);
@@ -88,6 +91,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public E set(int index, E element) {
+        Objects.requireNonNull(element);
         checkIndex(index);
 
         data[index] = element;
@@ -95,17 +99,19 @@ public class MyArrayList<E> implements List<E> {
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(Object element) {
+        Objects.requireNonNull(element);
         for(int i=0; i<size; i++)
-            if(data[i].equals(o))
+            if(data[i].equals(element))
                 return i;
         return -1;
     }
 
     @Override
-    public int lastIndexOf(Object o) {
+    public int lastIndexOf(Object element) {
+        Objects.requireNonNull(element);
         for(int i=size-1; i>=0; i++)
-            if(data[i].equals(o))
+            if(data[i].equals(element))
                 return i;
         return -1;
     }
@@ -120,8 +126,9 @@ public class MyArrayList<E> implements List<E> {
     }
 
     @Override
-    public boolean remove(Object o) {
-        int index = indexOf(o);
+    public boolean remove(Object element) {
+        Objects.requireNonNull(element);
+        int index = indexOf(element);
         if(index != -1) {
             remove(index);
             return true;
@@ -131,9 +138,14 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        BooleanHolder modified = new BooleanHolder(false);
-        c.forEach(action-> { if(remove(action)) modified.value = true; });
-        return modified.value;
+        boolean modified = false;
+
+        Iterator<?> iterator = c.iterator();
+        while(iterator.hasNext()) {
+            if(remove(iterator.next()))
+                modified = true;
+        }
+        return modified;
     }
 
     @Override

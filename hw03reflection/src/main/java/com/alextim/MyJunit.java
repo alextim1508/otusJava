@@ -17,13 +17,16 @@ public class MyJunit {
     public static void runWith(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         List<TestStatus> generalResult = new ArrayList<>();
         Class<?> cl = Class.forName(className);
+        List<Method> testMethods= getMethodsByAnnotations(cl, Test.class);
+        List<Method> beforeMethods = getMethodsByAnnotations(cl, Before.class);
+        List<Method> afterMethods = getMethodsByAnnotations(cl, After.class);
 
-        for (Method testMethod : getMethodsByAnnotations(cl, Test.class)) {
+        for (Method testMethod : testMethods) {
             Object instance = instantiate(cl);
             try {
-                runMethods(instance, getMethodsByAnnotations(cl, Before.class));
+                runMethods(instance, beforeMethods);
                 runMethod(instance, testMethod);
-                runMethods(instance, getMethodsByAnnotations(cl, After.class));
+                runMethods(instance, afterMethods);
                 addResultToLog(testMethod, TestStatus.PASSED);
                 generalResult.add(TestStatus.PASSED);
             }
@@ -69,12 +72,12 @@ public class MyJunit {
         System.out.println(message);
     }
 
-    private static void addGeneralResultToLog(Class cl, List<TestStatus> status) {
+    private static void addGeneralResultToLog(Class cl, List<TestStatus> testStatuses) {
         String message = new StringBuilder("Test Execution for completed. ")
                 .append(cl.getName()).append(": ")
-                .append(Collections.frequency(status, TestStatus.PASSED)).append(" PASSED, ")
-                .append(Collections.frequency(status, TestStatus.BROKEN)).append(" BROKEN, ")
-                .append(Collections.frequency(status, TestStatus.FAILED)).append(" FAILED. \n").toString();
+                .append(Collections.frequency(testStatuses, TestStatus.PASSED)).append(" PASSED, ")
+                .append(Collections.frequency(testStatuses, TestStatus.BROKEN)).append(" BROKEN, ")
+                .append(Collections.frequency(testStatuses, TestStatus.FAILED)).append(" FAILED. \n").toString();
         System.out.println(message);
     }
 

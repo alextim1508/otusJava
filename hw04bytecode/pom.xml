@@ -9,30 +9,34 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hw01maven</artifactId>
+    <artifactId>hw04bytecode</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.name}</finalName>
-
+        <finalName>instrumentationDemo</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
+                        <index>true</index>
                         <manifest>
-                            <mainClass>com.alextim.Main</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <Main-Class>com.alextim.Main</Main-Class>
                         </manifest>
+                        <manifestEntries>
+                            <Premain-Class>com.alextim.Agent</Premain-Class>
+                        </manifestEntries>
                     </archive>
                 </configuration>
                 <executions>

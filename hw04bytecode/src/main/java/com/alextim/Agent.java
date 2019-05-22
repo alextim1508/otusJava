@@ -3,7 +3,10 @@ package com.alextim;
 import org.objectweb.asm.*;
 
 import java.lang.annotation.Annotation;
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,18 +28,22 @@ public class Agent {
     }
 
     public static void premain(String agentArgs, Instrumentation inst) {
-        inst.addTransformer((loader, className, classBeingRedefined, protectionDomain, classfileBuffer) -> {
-            List<Method> methods = findMethodsByAnnotation(classfileBuffer, Log.class);
+        inst.addTransformer(new ClassFileTransformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+                List<Method> methods = findMethodsByAnnotation(classfileBuffer, Log.class);
 
-            if(!methods.isEmpty())
-                return addProxyMethods(className, classfileBuffer, methods);
-            return null;
+                if(!methods.isEmpty())
+                    return addProxyMethods(className, classfileBuffer, methods);
+                return null;
+            }
         });
     }
 
     private static List<Method> findMethodsByAnnotation(byte[] originalClass, Class<? extends Annotation> desiredAnnotation) {
         ClassReader reader = new ClassReader(originalClass);
         ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
+        String desiredDescriptor = Type.getDescriptor(desiredAnnotation);
 
         List<Method> methods = new ArrayList<>();
         reader.accept(new ClassVisitor(Opcodes.ASM5, writer) {
@@ -45,7 +52,8 @@ public class Agent {
                 return new MethodVisitor(api, super.visitMethod(access, methodName, methodDescriptor, methodSignature, methodExceptions)) {
                     @Override
                     public AnnotationVisitor visitAnnotation(String annotationDescriptor, boolean visible) {
-                        if(annotationDescriptor.equals(Type.getDescriptor(desiredAnnotation))) {
+
+                        if(annotationDescriptor.equals(desiredDescriptor)) {
                             methods.add(new Method(methodName, methodDescriptor, methodSignature, methodExceptions));
                         }
                         return super.visitAnnotation(annotationDescriptor, visible);
@@ -85,7 +93,7 @@ public class Agent {
             mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
 
             //builder.append("Execute " + methods.get(i).name + " with param: ");
-            mv.visitLdcInsn("Execute " + methods.get(i).name + " with param: ");
+            mv.visitLdcInsn("Executed " + methods.get(i).name + " with param: ");
             mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
 
 

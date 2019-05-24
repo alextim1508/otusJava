@@ -13,6 +13,7 @@
         <module>hw02myarraylist</module>
         <module>hw03reflection</module>
         <module>hw04bytecode</module>
+        <module>hw05gc</module>
     </modules>
 
     <developers>

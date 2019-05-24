@@ -12,6 +12,8 @@ import com.alextim.monitoring.GCmonitoring;
 public class Main {
 
     public static void main(String[] args) {
+
+
         GCmonitoring.startMonitoring();
         try {
             App.startApp();

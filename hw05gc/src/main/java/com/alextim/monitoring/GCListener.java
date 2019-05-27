@@ -1,15 +1,19 @@
 package com.alextim.monitoring;
 
 import com.sun.management.GarbageCollectionNotificationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.openmbean.CompositeData;
 
 public class GCListener implements NotificationListener {
-    private static int youngCount; /* Todo не будет ли проблем с многопоточностью ?*/
+    private static int youngCount;
     private static int oldCount;
     private static long totalDuration;
+
+    private static final Logger logger = LoggerFactory.getLogger(GCListener.class);
 
     @Override
     public void handleNotification(Notification notification, Object handback) {
@@ -18,7 +22,7 @@ public class GCListener implements NotificationListener {
                     GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
 
             GCinfo info = GCinfo.parse(notificationInfo);
-            System.out.println(info);
+            logger.info(info.toString());
 
             totalDuration += info.getDuration();
 
@@ -37,15 +41,15 @@ public class GCListener implements NotificationListener {
         }
     }
 
-    public static int getYoungCount() {
+    public static synchronized int getYoungCount() {
         return youngCount;
     }
 
-    public static int getOldCount() {
+    public static synchronized int getOldCount() {
         return oldCount;
     }
 
-    public static long getTotalDuration() {
+    public static synchronized long getTotalDuration() {
         return totalDuration;
     }
 }

@@ -2,6 +2,9 @@ package com.alextim;
 
 import com.alextim.monitoring.GCmonitoring;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /*
 1) -Xms128m -Xmx128m -XX:+UseSerialGC
 2) -Xms128m -Xmx128m -XX:+UseParallelGC
@@ -13,16 +16,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         GCmonitoring.startMonitoring();
-        try {
-            App.startApp();
-        }
-        catch (OutOfMemoryError er) {
-            System.out.println("OutOfMemoryError");
-        }
-        finally {
-            GCmonitoring.printStatisticsGC();
-        }
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                GCmonitoring.printStatisticsGC();
+            }
+        }, 0, 1000);
+
+        App.startApp();
     }
 }

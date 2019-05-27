@@ -17,5 +17,9 @@ public class App {
             }
         }
     }
+
+    public static int getSizeList() {
+        return list.size();
+    }
 }
 

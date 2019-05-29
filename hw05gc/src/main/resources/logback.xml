@@ -1,0 +1,39 @@
+<configuration>
+
+    <appender name="STDOUT_GREEN" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%green(%d{HH:mm:ss.SSS} [%thread] %-5level %logger{54} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_BLUE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%blue(%d{HH:mm:ss.SSS} [%thread] %-5level %logger{54} - %msg) %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./hw05gc/statGC/statGC.log</file>
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <logger name="com.alextim.monitoring.GCListener" level="DEBUG">
+        <appender-ref ref="STDOUT_GREEN"/>
+    </logger>
+
+    <logger name="com.alextim.monitoring.GCmonitoring" level="DEBUG">
+        <appender-ref ref="STDOUT_BLUE"/>
+    </logger>
+
+    <logger name="com.alextim.monitoring.GCmonitoring" level="DEBUG">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+
+</configuration>

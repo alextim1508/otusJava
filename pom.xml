@@ -14,6 +14,7 @@
         <module>hw03reflection</module>
         <module>hw04bytecode</module>
         <module>hw05gc</module>
+        <module>hw06atm</module>
     </modules>
 
     <developers>

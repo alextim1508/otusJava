@@ -7,7 +7,7 @@ public interface Atm {
 
     void putDeposit(Banknote banknote, int count);
 
-    Map<Banknote, Integer> takeDeposit(int deposit);
+    Map<Banknote, Integer> takeDeposit(int deposit) throws WrongDepositException;
 
     long getBalance();
 }

@@ -2,21 +2,29 @@ package com.alextim.banknotes;
 
 public enum RubBanknote implements Banknote {
 
-    Rub100(100),
-    Rub200(200),
-    Rub500(500),
-    Rub1000(1000),
-    Rub2000(2000),
-    Rub5000(5000);
+    Rub100(100, "RUB"),
+    Rub200(200, "RUB"),
+    Rub500(500, "RUB"),
+    Rub1000(1000, "RUB"),
+    Rub2000(2000, "RUB"),
+    Rub5000(5000, "RUB");
 
-    private int nominal;
+    private final int nominal;
 
-    RubBanknote(int nominal) {
+    private final String code;
+
+    RubBanknote(int nominal, String code) {
         this.nominal = nominal;
+        this.code = code;
     }
 
     @Override
     public int getNominal() {
         return nominal;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
     }
 }

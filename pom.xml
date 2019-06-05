@@ -15,6 +15,7 @@
         <module>hw04bytecode</module>
         <module>hw05gc</module>
         <module>hw06atm</module>
+        <module>hw07patterns</module>
     </modules>
 
     <developers>

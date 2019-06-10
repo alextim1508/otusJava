@@ -6,10 +6,13 @@ import java.util.*;
 
 public class MySerializer {
 
-    public static String toJson(Object object) throws IllegalAccessException {
+    public static String toJson(Object object) {
 
+        if(object == null) {
+            return "null";
+        }
         if (object instanceof Number || object instanceof Boolean || object instanceof Character || object instanceof String) {
-            return object.toString();
+            return "\"" + object.toString() + "\"";
         }
         else if (object instanceof Collection) {
             return appendCollection(object);
@@ -17,8 +20,14 @@ public class MySerializer {
         else if (object.getClass().isArray()) {
             return appendArray(object);
         }
-        else
-            return appendObject(object);
+        else {
+            try {
+                return appendObject(object);
+            }
+            catch (IllegalAccessException e) {
+                throw new RuntimeException("Fail serialization: " + e);
+            }
+        }
     }
 
     private static String appendObject(Object object) throws IllegalAccessException {
@@ -29,29 +38,29 @@ public class MySerializer {
         for (Field field : fields) {
             field.setAccessible(true);
             builder.append(separator).append("\"" + field.getName() + "\"" + " : " +  toJson(field.get(object)));
-            separator = ",";
+            separator = ", ";
             field.setAccessible(false);
         }
         return builder.append("}").toString();
     }
 
-    private static String appendArray(Object object) throws IllegalAccessException {
+    private static String appendArray(Object object) {
         StringBuilder builder = new StringBuilder("[");
         for (int i = 0; i < Array.getLength(object); i++) {
             builder.append(toJson(Array.get(object, i)));
             if (i != Array.getLength(object)-1) {
-                builder.append(",");
+                builder.append(", ");
             }
         }
         return builder.append("]").toString();
     }
 
-    private static String appendCollection(Object object) throws IllegalAccessException {
+    private static String appendCollection(Object object) {
         StringBuilder builder = new StringBuilder("[");
         String separator = "";
         for (Object value : (Collection) object) {
             builder.append(separator).append(toJson(value));
-            separator = ",";
+            separator = ", ";
         }
         return builder.append("]").toString();
     }

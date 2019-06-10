@@ -13,7 +13,7 @@ import java.util.List;
 public class MySerializerTest {
 
     @Test
-    public void test() throws IllegalAccessException {
+    public void test()  {
         Person ivan = new Person("Ivan", 23, new Address("Spb", "Mira"));
 
         String json = MySerializer.toJson(ivan);
@@ -30,7 +30,8 @@ public class MySerializerTest {
         private final String name;
         private final int age;
         private final Address address;
-        private final int[] array = new int[] {1, 2, 3};
+        private final int[] array = null;
+        private final int[] array2 = new int[] {1,2,3};
         private final Rating[] ratings = new Rating[] {new Rating(1),new Rating(2), new Rating(3)};
         private List<Integer> list = Arrays.asList(1,2,3,4,5);
         private List<String> strings = Arrays.asList("1", "2", "3");

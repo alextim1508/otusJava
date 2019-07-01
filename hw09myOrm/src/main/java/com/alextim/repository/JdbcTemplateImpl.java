@@ -11,10 +11,10 @@ import java.util.*;
 
 public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
-    private static final String CREATE_TABLE = "create table %s (%s)";
+    private static final String CREATE_TABLE = "create table %s (%s);";
     private static final String INSERT = "insert into %s (%s) values (%s);";
-    private static final String GET_BY_ID = "select * from %s where id = %d";
-    private static final String UPDATE = "update %s set %s where id = %d;";
+    private static final String GET_BY_ID = "select * from %s where id = ?";
+    private static final String UPDATE = "update %s set %s where id = ?;";
 
     private final DbExecutor<T> executor;
 
@@ -47,27 +47,27 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
         String sql = String.format(CREATE_TABLE, cl.getSimpleName(), param.toString());
         System.out.println("sql = " + sql);
 
-        executor.execute(sql);
+        executor.execute(sql, Collections.emptyList());
     }
-
 
     @Override
     public long create(T objectData) throws SQLException {
         Class<?> cl = objectData.getClass();
         StringBuilder args = new StringBuilder();
-        StringBuilder values = new StringBuilder();
+        StringBuilder param = new StringBuilder();
 
         Field fieldId = null;
         String separator = "";
+        List<String> values = new ArrayList<>();
         try {
             for(Field field: cl.getDeclaredFields()) {
                 if(!field.isAnnotationPresent(Id.class)) {
                     field.setAccessible(true);
+
                     args.append(separator).append(field.getName());
-                    String quote = "";
-                    if(field.getType().equals(String.class))
-                        quote = "'";
-                    values.append(separator).append(quote).append(field.get(objectData)).append(quote);
+                    param.append(separator).append("?");
+                    values.add(field.get(objectData).toString());
+
                     field.setAccessible(false);
                     separator = ", ";
                 }
@@ -84,18 +84,17 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
         if(fieldId == null)
             throw new RuntimeException(cl.getName() + "does not contain a field with @Id");
 
-        String sql = String.format(INSERT, cl.getSimpleName(), args, values);
+        String sql = String.format(INSERT, cl.getSimpleName(), args, param);
         System.out.println("sql = " + sql);
 
-       return executor.executeUpdate(sql);
+       return executor.executeUpdate(sql, values);
     }
-
 
     @Override
     public T load(long id, Class<T> cl) throws SQLException {
-        String sql = String.format(GET_BY_ID, cl.getSimpleName(), id);
+        String sql = String.format(GET_BY_ID, cl.getSimpleName());
         System.out.println("sql = " + sql);
-        Optional<T> result = executor.executeQuery(sql, resultSet -> createObjectByResultSet(cl, resultSet));
+        Optional<T> result = executor.executeQuery(sql, id, resultSet -> createObjectByResultSet(cl, resultSet));
 
         if(!result.isPresent())
             throw new RuntimeException("Empty result!");
@@ -103,22 +102,21 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
         return result.get();
     }
 
-
     @Override
     public void update(T objectData) throws SQLException {
         Class<?> cl = objectData.getClass();
         StringBuilder args = new StringBuilder();
 
         String separator = "";
-        long id = 0;
+        long id = -1;
+        List<String> param = new ArrayList<>();
         try {
             for(Field field: cl.getDeclaredFields()) {
                 field.setAccessible(true);
                 if(!field.isAnnotationPresent(Id.class)) {
-                    String quote = "";
-                    if(field.getType().equals(String.class))
-                        quote = "'";
-                    args.append(separator).append(field.getName()).append("=").append(quote).append(field.get(objectData)).append(quote);
+
+                    args.append(separator).append(field.getName()).append("= ?");
+                    param.add(field.get(objectData).toString());
                     separator = ", ";
                 }
                 else {
@@ -131,10 +129,11 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
             throw new RuntimeException(e);
         }
 
-        String sql = String.format(UPDATE, cl.getSimpleName(), args, id);
+        param.add(String.valueOf(id));
+        String sql = String.format(UPDATE, cl.getSimpleName(), args);
         System.out.println("sql = " + sql);
 
-        executor.execute(sql);
+        executor.execute(sql, param);
     }
 
     private T createObjectByResultSet(Class<T> cl, ResultSet resultSet) {

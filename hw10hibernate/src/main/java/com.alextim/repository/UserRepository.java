@@ -11,8 +11,13 @@ public interface UserRepository {
     List<User> getAll(int page, int amountByOnePage);
 
     User findById(long id);
+    List<User> findByName(String name);
+    User findUserByStreet(String street);
+    List<User> getUsersByPhoneNumber(String number);
 
     void update(long id, User user);
 
-    void delete(long id);
+    void delete(User user);
+
+    void deleteAll();
 }

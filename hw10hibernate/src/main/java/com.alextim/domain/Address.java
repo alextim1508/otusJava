@@ -4,16 +4,23 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Table(name = "address")
+import static com.alextim.domain.Address.COLUMN_STREET;
+import static com.alextim.domain.Address.TABLE;
+
+@Entity @Table(name = TABLE, uniqueConstraints= @UniqueConstraint(columnNames={COLUMN_STREET}))
 @Data @NoArgsConstructor @RequiredArgsConstructor @EqualsAndHashCode(exclude = {"id", "user"}) @ToString(exclude = {"user"})
 public class Address {
+
+    public static final String TABLE = "Address";
+    public static final String COLUMN_STREET = "street";
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NonNull
+    @Column(name = COLUMN_STREET)
     private String street;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     private User user;
 }

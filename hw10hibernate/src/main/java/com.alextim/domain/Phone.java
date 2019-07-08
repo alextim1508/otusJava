@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import java.util.List;
-
 import static com.alextim.domain.Phone.COLUMN_NUMBER;
 import static com.alextim.domain.Phone.TABLE;
 
@@ -23,6 +21,6 @@ public class Phone {
     @Column(name = COLUMN_NUMBER)
     private String number;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "phones")
-    private List<User> user;
+    @ManyToOne
+    private User user;
 }

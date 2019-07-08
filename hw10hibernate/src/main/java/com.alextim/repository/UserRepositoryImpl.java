@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class UserRepositoryImpl implements UserRepository {
@@ -29,11 +30,17 @@ public class UserRepositoryImpl implements UserRepository {
             try {
                 session.getTransaction().begin();
                 session.save(user);
+                List<Phone> phones = user.getPhones();
+                phones.forEach(phone -> {
+                    phone.setUser(user);
+                    session.save(phone);
+                });
                 session.getTransaction().commit();
             }
             catch (Exception e) {
                 System.out.println("Exception:" + e.getMessage());
                 session.getTransaction().rollback();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -127,7 +134,7 @@ public class UserRepositoryImpl implements UserRepository {
             List<Phone> phones = query.getResultList();
 
             List<User> users = new ArrayList<>();
-            phones.forEach(phone -> users.addAll(phone.getUser()));
+            phones.forEach(phone -> users.add(phone.getUser()));
             return users;
         }
     }

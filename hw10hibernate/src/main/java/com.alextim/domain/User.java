@@ -35,7 +35,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL) @JoinColumn(name = COLUMN_ADDRESS_ID)
     private Address address;
 
-    @ManyToMany(cascade = CascadeType.ALL) @JoinTable(inverseJoinColumns = @JoinColumn(unique = true))
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @Singular
     private List<Phone> phones;
 

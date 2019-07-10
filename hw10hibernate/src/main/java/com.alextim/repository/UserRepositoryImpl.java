@@ -28,12 +28,9 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
     @Override
     public void insert(User user) {
         sessionAop(session -> {
-            session.save(user);
             List<Phone> phones = user.getPhones();
-            phones.forEach(phone -> {
-                phone.setUser(user);
-                session.save(phone);
-            });
+            phones.forEach(phone -> phone.setUser(user));
+            session.save(user);
             return user;
         });
     }

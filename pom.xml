@@ -16,9 +16,10 @@
         <module>hw05gc</module>
         <module>hw06atm</module>
         <module>hw07patterns</module>
-        <module>hw08serialization</module>
+        <module>hw08mySerialization</module>
         <module>hw09myOrm</module>
         <module>hw10hibernate</module>
+        <module>hw11myCache</module>
     </modules>
 
     <developers>
@@ -32,7 +33,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <guava.version>27.1-jre</guava.version>
-        <junit.version>5.3.2</junit.version>
+        <junit5.version>5.3.2</junit5.version>
         <mockito.version>1.10.19</mockito.version>
         <asm.version>7.1</asm.version>
         <logback.version>1.3.0-alpha4</logback.version>
@@ -41,6 +42,8 @@
         <h2database.version>1.4.197</h2database.version>
         <mysql.version>8.0.11</mysql.version>
         <hibernate.version>5.4.1.Final</hibernate.version>
+        <junit4.version>4.13-beta-3</junit4.version>
+        <powermock.version>1.7.4</powermock.version>
     </properties>
 
     <dependencyManagement>
@@ -53,18 +56,34 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit.version}</version>
+                <version>${junit5.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>${junit.version}</version>
+                <version>${junit5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit4.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
                 <version>${mockito.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>

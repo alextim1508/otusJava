@@ -4,7 +4,7 @@ import com.alextim.domain.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserRepository extends AutoCloseable {
     void insert(User user);
 
     long getCount();

@@ -12,11 +12,10 @@ import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 
-public class UserRepositoryImpl implements UserRepository, AutoCloseable {
+public class UserRepositoryImpl implements UserRepository {
 
     private final SessionFactory sessionFactory;
 
@@ -27,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public void insert(User user) {
-        sessionAop(session -> {
+        executeInTransaction(session -> {
             List<Phone> phones = user.getPhones();
             phones.forEach(phone -> phone.setUser(user));
             session.save(user);
@@ -37,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public long getCount() {
-        return sessionAop(session -> {
+        return executeInTransaction(session -> {
             Query query = session.createQuery("select count(u) from User u");
             return (long)query.getSingleResult();
         });
@@ -45,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public List<User> getAll(int page, int amountByOnePage) {
-        return sessionAop(session -> {
+        return executeInTransaction(session -> {
             Query<User> query = session.createQuery("select u from User u", User.class);
             query.setFirstResult(page * amountByOnePage);
             query.setMaxResults(amountByOnePage);
@@ -53,15 +52,14 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
         });
     }
 
-
     @Override
     public User findById(long id) {
-        return sessionAop(session -> session.get(User.class, id));
+        return executeInTransaction(session -> session.get(User.class, id));
     }
 
     @Override
     public List<User> findByName(String name) {
-        return sessionAop(session -> {
+        return executeInTransaction(session -> {
             Query<User> query = session.createQuery("select u from User u where u.name = :name", User.class);
             query.setParameter("name", name);
             return query.getResultList();
@@ -70,7 +68,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public void update(long id, User user) {
-        sessionAop(session -> {
+        executeInTransaction(session -> {
             User byId = findById(id);
             byId.setName(user.getName());
             byId.setAddress(user.getAddress());
@@ -82,7 +80,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public void delete(User user) {
-        sessionAop(session -> {
+        executeInTransaction(session -> {
             session.remove(user);
             return null;
         });
@@ -96,7 +94,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public User findUserByStreet(String street){
-        return sessionAop(session -> {
+        return executeInTransaction(session -> {
             Query<Address> query = session.createQuery("select a from Address a where a.street = :street", Address.class);
             query.setParameter("street", street);
             Address address = query.uniqueResult();
@@ -109,7 +107,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
 
     @Override
     public List<User> getUsersByPhoneNumber(String number) {
-        return sessionAop(session -> {
+        return executeInTransaction(session -> {
             Query<Phone> query = session.createQuery("select ph from Phone ph where ph.number = :number", Phone.class);
             query.setParameter("number", number);
             List<Phone> phones = query.getResultList();
@@ -125,7 +123,7 @@ public class UserRepositoryImpl implements UserRepository, AutoCloseable {
         sessionFactory.close();
     }
 
-    private <R> R sessionAop(Function<Session, R> function) {
+    private <R> R executeInTransaction(Function<Session, R> function) {
         try (Session session = sessionFactory.openSession()) {
             try {
                 session.getTransaction().begin();

@@ -51,18 +51,13 @@ public class MyCacheTest {
             @Override
             protected long getCurrentTime() {
                 Calendar calendar = Calendar.getInstance();
-                //calendar.set(Calendar.SECOND, calendar.get(Calendar.SECOND) - 1);
                 return calendar.getTime().getTime();
             }
         };
         cache.put("key", element);
 
-        Thread.currentThread().sleep(1100); //Todo очень плохо. Но так как используется таймер, то ничего не поделаешь... Да?
+        Thread.currentThread().sleep(1100);
+        //Todo очень плохо. Но так как используется таймер, то ничего не поделаешь... Да?
         Assertions.assertEquals(null, cache.get("key"));
-    }
-
-    @Test
-    public void elementIdleTimeTest() {
-
     }
 }

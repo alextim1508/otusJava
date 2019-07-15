@@ -60,7 +60,11 @@ public class MyCache<V extends CacheElement<?>> implements Cache<V> {
     @Override
     public V get(String key) {
         V element = cache.get(key);
-        if(element != null) { //Todo null - если умрет по таймеру, а если убьет gc?
+        if(element != null) {
+            if(element.get() == null) {
+                remove(key);
+                return null;
+            }
             hit++;
             element.setAccessed();
         }

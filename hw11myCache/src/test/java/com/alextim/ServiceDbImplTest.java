@@ -15,6 +15,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 public class ServiceDbImplTest {
 
@@ -25,11 +29,6 @@ public class ServiceDbImplTest {
 
     private ServiceDB service = new ServiceDbImpl(repo, cache);
 
-    @BeforeEach
-    void setUp() throws Exception {
-        //doNothing().when(repo).insert(any(User.class));
-    }
-
     @Test
     public void test() {
         User alex = User.builder()
@@ -39,13 +38,8 @@ public class ServiceDbImplTest {
                 .phone(new Phone("11"))
                 .build();
 
-//        service.save(alex);
-
-        repo.insert(alex);
-        User byId = repo.findById(alex.getId());
-        System.out.println("ById: " + byId);
-
-        //        service.load(alex.getId());
-//        verify(repo, times(0)).findById(any(long.class));
+        service.save(alex);
+        service.load(alex.getId());
+        verify(repo, times(0)).findById(any(long.class));
     }
 }

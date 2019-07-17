@@ -1,8 +1,10 @@
 package com.alextim.cache;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.lang.ref.SoftReference;
+import java.util.Optional;
 
 public class CacheElement<T> extends SoftReference<T>  {
 

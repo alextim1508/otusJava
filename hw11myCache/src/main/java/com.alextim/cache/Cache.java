@@ -1,6 +1,6 @@
 package com.alextim.cache;
 
-public interface Cache<V extends CacheElement<?>> {
+public interface Cache<V> {
 
     void put(String key, V value);
 
@@ -13,4 +13,6 @@ public interface Cache<V extends CacheElement<?>> {
     void removeListener(CacheListener<V> listener);
 
     void dispose();
+
+    void print();
 }

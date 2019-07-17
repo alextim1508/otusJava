@@ -19,7 +19,7 @@ public class ServiceDbImpl implements ServiceDB {
 
     private final UserRepository repo;
 
-    private final Cache<CacheElement<User>> cache;
+    private final Cache<User> cache;
 
     @Override
     public void save(User user) {
@@ -29,19 +29,19 @@ public class ServiceDbImpl implements ServiceDB {
 
     @Override
     public User load(long id) {
-        CacheElement<User> userFromCache = cache.get(new CacheKey(User.class).createKey(id));
-        if(userFromCache == null || userFromCache.get() == null) {
+        User userFromCache = cache.get(new CacheKey(User.class).createKey(id));
+        if(userFromCache == null ) {
             User userFromRepository = repo.findById(id);
-            cache.put(CacheKey.getKey(userFromRepository), new CacheElement<>(userFromRepository));
+            cache.put(CacheKey.getKey(userFromRepository), userFromRepository);
             return userFromRepository;
         }
-        return userFromCache.get();
+        return userFromCache;
     }
 
     @Override
     public List<User> load(String name) {
         List<User> users = repo.findByName(name);
-        users.forEach(user -> cache.put(CacheKey.getKey(user), new CacheElement<>(user)));
+        users.forEach(user -> cache.put(CacheKey.getKey(user), user));
         return users;
     }
 
@@ -56,7 +56,7 @@ public class ServiceDbImpl implements ServiceDB {
 
         cache.remove(new CacheKey(User.class).createKey(id));
         repo.update(id, user);
-        cache.put(CacheKey.getKey(user), new CacheElement<>(user));
+        cache.put(CacheKey.getKey(user), user);
     }
 
     @Override

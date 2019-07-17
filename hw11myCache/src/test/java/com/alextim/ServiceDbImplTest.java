@@ -24,7 +24,7 @@ public class ServiceDbImplTest {
 
     private static UserRepository repo = new UserRepositoryImpl();
 
-    private static Cache<CacheElement<User>> cache =
+    private static Cache<User> cache =
             new MyCache<>(10, TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(1));
 
     private ServiceDB service = new ServiceDbImpl(repo, cache);

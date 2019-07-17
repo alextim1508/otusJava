@@ -24,7 +24,7 @@ public class ServiceDbImpl implements ServiceDB {
     @Override
     public void save(User user) {
         repo.insert(user);
-        cache.put(CacheKey.getKey(user), new CacheElement<>(user));
+        cache.put(CacheKey.getKey(user),user);
     }
 
     @Override

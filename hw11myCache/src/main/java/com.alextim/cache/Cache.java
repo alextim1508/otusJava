@@ -2,11 +2,11 @@ package com.alextim.cache;
 
 public interface Cache<V> {
 
-    void put(String key, V value);
+    void put(CacheKey key, V value);
 
-    void remove(String key);
+    void remove(CacheKey key);
 
-    V get(String key);
+    V get(CacheKey key);
 
     void addListener(CacheListener<V> listener);
 
@@ -14,5 +14,5 @@ public interface Cache<V> {
 
     void dispose();
 
-    void print();
+    int size();
 }

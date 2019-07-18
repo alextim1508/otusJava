@@ -2,15 +2,19 @@ package com.alextim.cache;
 
 import lombok.*;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 import java.util.function.Function;
 
-@Data @RequiredArgsConstructor
+@Data @RequiredArgsConstructor @Slf4j
 public class MyCache<V> implements Cache<V> {
 
-    private final Map<String, CacheElement<V>> cache = new HashMap<>();
+    private final Map<CacheKey, CacheElement<V>> cache = new HashMap<>();
 
     private final Set<CacheListener<V>> listeners = new HashSet<>();
+
+    private final Map<CacheKey, List<TimerTask>> timerTasks = new HashMap<>();
 
     private final Timer timer = new Timer();
 
@@ -30,32 +34,39 @@ public class MyCache<V> implements Cache<V> {
     private int miss;
 
     @Override
-    public void put(String key, V value) {
-        System.out.println("Put " + key);
+    public void put(CacheKey key, V value) {
+        log.info("Put: {} {}", key, value);
 
         if (cache.size() == maxElements) {
-            String firstKey = cache.keySet().iterator().next();
+            CacheKey firstKey = cache.keySet().iterator().next();
             cache.remove(firstKey);
         }
 
         cache.put(key, new CacheElement<>(value));
 
+        List<TimerTask> timerTasksList = new ArrayList<>();
         if (lifeTimeMs != 0) {
             TimerTask lifeTimerTask = getTimerTask(key, lifeElement -> lifeElement.getCreationTime() + lifeTimeMs);
             timer.schedule(lifeTimerTask, lifeTimeMs);
+            timerTasksList.add(lifeTimerTask);
         }
         if (idleTimeMs != 0) {
             TimerTask idleTimerTask = getTimerTask(key, idleElement -> idleElement.getLastAccessTime() + idleTimeMs);
             timer.schedule(idleTimerTask, idleTimeMs, idleTimeMs);
+            timerTasksList.add(idleTimerTask);
         }
+        timerTasks.put(key, timerTasksList);
 
         listeners.forEach(listener -> listener.notify(value, "put new object"));
     }
 
     @Override
-    public void remove(String key) {
+    public void remove(CacheKey key) {
         CacheElement<V> removed = cache.remove(key);
-        System.out.println("Remove " + key + " " + removed);
+        log.info("Remove: {} {}", key, removed);
+
+        timerTasks.get(key).forEach(TimerTask::cancel);
+
         listeners.forEach(listener -> {
             if(removed != null)
                 listener.notify(removed.get(), "remove object");
@@ -63,9 +74,10 @@ public class MyCache<V> implements Cache<V> {
     }
 
     @Override
-    public V get(String key) {
-        System.out.println("Get " + key);
+    public V get(CacheKey key) {
         CacheElement<V> element = cache.get(key);
+        log.info("Get: {} {}", key, element);
+
         if(element != null) {
             if(element.get() == null) {
                 remove(key);
@@ -86,15 +98,18 @@ public class MyCache<V> implements Cache<V> {
         timer.cancel();
     }
 
-    private TimerTask getTimerTask(final String key, Function<CacheElement<?>, Long> timeFunction) {
+    private TimerTask getTimerTask(final CacheKey key, Function<CacheElement<?>, Long> timeFunction) {
         return new TimerTask() {
             @Override
             public void run() {
                 CacheElement<V> element = cache.get(key);
-                System.out.println("Timer " + element);
-                if (element == null || timeFunction.apply(element) < System.currentTimeMillis()) {
+                log.debug("Timer event {} {}", key, element);
+
+                if(element == null || timeFunction.apply(element) < System.currentTimeMillis()) {
                     remove(key);
-                    cancel();
+                }
+                else {
+                    log.debug("Survived {} {}", key, element);
                 }
             }
         };
@@ -111,8 +126,7 @@ public class MyCache<V> implements Cache<V> {
     }
 
     @Override
-    public void print() {
-        System.out.println("print");
-        cache.forEach((key, element) -> System.out.println("-- key " + key + " value " + element));
+    public int size() {
+        return cache.size();
     }
 }

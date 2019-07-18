@@ -24,15 +24,15 @@ public class ServiceDbImpl implements ServiceDB {
     @Override
     public void save(User user) {
         repo.insert(user);
-        cache.put(CacheKey.getKey(user),user);
+        cache.put(CacheKey.buildKey(user), user);
     }
 
     @Override
     public User load(long id) {
-        User userFromCache = cache.get(new CacheKey(User.class).createKey(id));
-        if(userFromCache == null ) {
+        User userFromCache = cache.get(CacheKey.buildKey(User.class, id));
+        if(userFromCache == null) {
             User userFromRepository = repo.findById(id);
-            cache.put(CacheKey.getKey(userFromRepository), userFromRepository);
+            cache.put(CacheKey.buildKey(userFromRepository), userFromRepository);
             return userFromRepository;
         }
         return userFromCache;
@@ -41,7 +41,7 @@ public class ServiceDbImpl implements ServiceDB {
     @Override
     public List<User> load(String name) {
         List<User> users = repo.findByName(name);
-        users.forEach(user -> cache.put(CacheKey.getKey(user), user));
+        users.forEach(user -> cache.put(CacheKey.buildKey(user), user));
         return users;
     }
 
@@ -54,15 +54,15 @@ public class ServiceDbImpl implements ServiceDB {
                 .phones(phones)
                 .build();
 
-        cache.remove(new CacheKey(User.class).createKey(id));
+        cache.remove(CacheKey.buildKey(User.class, id));
         repo.update(id, user);
-        cache.put(CacheKey.getKey(user), user);
+        cache.put(CacheKey.buildKey(user), user);
     }
 
     @Override
     public void remove(long id) {
         repo.delete(repo.findById(id));
-        cache.remove(new CacheKey(User.class).createKey(id));
+        cache.remove(CacheKey.buildKey(User.class, id));
     }
 
     @Override

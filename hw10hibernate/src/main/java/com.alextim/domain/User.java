@@ -12,7 +12,7 @@ import static com.alextim.domain.User.TABLE;
 
 @Entity @Table(name = TABLE, uniqueConstraints= @UniqueConstraint(columnNames={COLUMN_NAME}))
 @Data @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(exclude = {"id", "address", "phones", "creationDate"}) @ToString()
-public class User {
+public class User implements DataSet {
 
     public static final String TABLE = "User";
     public static final String COLUMN_NAME = "name";

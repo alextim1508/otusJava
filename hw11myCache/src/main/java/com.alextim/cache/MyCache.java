@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Data @RequiredArgsConstructor @Slf4j
@@ -42,6 +43,9 @@ public class MyCache<V> implements Cache<V> {
             cache.remove(firstKey);
         }
 
+        if(cache.containsKey(key))
+            remove(key);
+
         cache.put(key, new CacheElement<>(value));
 
         List<TimerTask> timerTasksList = new ArrayList<>();
@@ -55,6 +59,7 @@ public class MyCache<V> implements Cache<V> {
             timer.schedule(idleTimerTask, idleTimeMs, idleTimeMs);
             timerTasksList.add(idleTimerTask);
         }
+
         timerTasks.put(key, timerTasksList);
 
         listeners.forEach(listener -> listener.notify(value, "put new object"));

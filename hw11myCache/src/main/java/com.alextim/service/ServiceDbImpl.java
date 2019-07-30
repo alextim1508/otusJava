@@ -9,10 +9,13 @@ import com.alextim.domain.User;
 import com.alextim.repository.UserRepository;
 import com.alextim.repository.UserRepositoryImpl;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
+import static com.alextim.service.HandlerException.handlerException;
 
 @RequiredArgsConstructor
 public class ServiceDbImpl implements ServiceDB {
@@ -23,8 +26,13 @@ public class ServiceDbImpl implements ServiceDB {
 
     @Override
     public void save(User user) {
-        repo.insert(user);
-        cache.put(CacheKey.buildKey(user), user);
+        try {
+            repo.insert(user);
+            cache.put(CacheKey.buildKey(user), user);
+        }
+        catch(Exception exception) {
+            handlerException(exception, user.toString());
+        }
     }
 
     @Override
@@ -41,6 +49,13 @@ public class ServiceDbImpl implements ServiceDB {
     @Override
     public List<User> load(String name) {
         List<User> users = repo.findByName(name);
+        users.forEach(user -> cache.put(CacheKey.buildKey(user), user));
+        return users;
+    }
+
+    @Override
+    public List<User> loadAll(int page, int amount) {
+        List<User> users = repo.getAll(page, amount);
         users.forEach(user -> cache.put(CacheKey.buildKey(user), user));
         return users;
     }

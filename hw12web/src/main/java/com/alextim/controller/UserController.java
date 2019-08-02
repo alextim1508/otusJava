@@ -59,7 +59,7 @@ public class UserController extends HttpServlet {
         builder.append("<a href=\"/\">home</a>");
 
         response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8"); //Todo почему не работает кодировка?
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter printWriter = response.getWriter();
         printWriter.print(builder.toString());

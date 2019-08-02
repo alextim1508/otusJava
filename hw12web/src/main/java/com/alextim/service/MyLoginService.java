@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.util.security.Credential;
 
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor @Slf4j
@@ -17,7 +18,7 @@ public class MyLoginService extends AbstractLoginService {
     protected String[] loadRoleInfo(UserPrincipal userPrincipal) {
         List<User> byNames = service.load(userPrincipal.getName());
         if(byNames.isEmpty())
-            return null;
+            return new String[0];
         User userFromDb = byNames.get(0);
         List<String> roles = userFromDb.getRoles();
         return roles.toArray(new String[roles.size()]);

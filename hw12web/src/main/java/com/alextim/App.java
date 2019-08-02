@@ -10,12 +10,14 @@ import com.alextim.repository.UserRepositoryImpl;
 import com.alextim.service.MyLoginService;
 import com.alextim.service.ServiceDB;
 import com.alextim.service.ServiceDbImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -31,9 +33,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class App {
 
     private final static int PORT = 8080;
@@ -98,7 +102,6 @@ public class App {
     }
 
 
-
     private Server createServer(int port) {
         LoginService loginService = getMyLoginService(serviceDb);
 
@@ -107,9 +110,10 @@ public class App {
         server.addBean(new ErrorHandler() {
             @Override
             protected void handleErrorPage(HttpServletRequest request, Writer writer, int code, String message) throws IOException {
-
-                writer.write("<!DOCTYPE<html><head><title>Error</title></head><html><body>"
-                        + code + " - " + HttpStatus.getMessage(code) + message + "</body></html>");
+                request.setCharacterEncoding("UTF-8");
+                Exception exception = (Exception)request.getAttribute("javax.servlet.error.exception");
+                log.error("Handle error. Code: {}, Message: {}", code, exception.getMessage());
+                writer.write("Code: "+ code + " Message: " +exception.getMessage());
             }
         });
 
@@ -171,6 +175,5 @@ public class App {
 
         return securityHandler;
     }
-
 
 }

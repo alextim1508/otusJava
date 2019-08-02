@@ -110,7 +110,6 @@ public class App {
         server.addBean(new ErrorHandler() {
             @Override
             protected void handleErrorPage(HttpServletRequest request, Writer writer, int code, String message) throws IOException {
-                request.setCharacterEncoding("UTF-8");
                 Exception exception = (Exception)request.getAttribute("javax.servlet.error.exception");
                 log.error("Handle error. Code: {}, Message: {}", code, exception.getMessage());
                 writer.write("Code: "+ code + " Message: " +exception.getMessage());

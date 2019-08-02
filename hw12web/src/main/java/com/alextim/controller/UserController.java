@@ -27,7 +27,7 @@ public class UserController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         StringBuilder builder = new StringBuilder();
         builder.append("<h3> Security info page: " + request.getUserPrincipal().getName() + " </h3>");
-        builder.append("<p> Users: </p>");
+        builder.append("<p> Пользователи: </p>");
 
         List<User> users = serviceDB.loadAll(0, Integer.MAX_VALUE);
         users.forEach(user -> builder.append("<p>" + user + "</p>"));
@@ -35,6 +35,7 @@ public class UserController extends HttpServlet {
         builder.append("<a href=\"/\">home</a>");
 
         response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter printWriter = response.getWriter();
         printWriter.print(builder.toString());
@@ -55,7 +56,7 @@ public class UserController extends HttpServlet {
         serviceDB.save(newUser);
 
         StringBuilder builder = new StringBuilder();
-        builder.append("<p>User added</p>");
+        builder.append("<p>Пользователь добавлен</p>");
         builder.append("<a href=\"/\">home</a>");
 
         response.setContentType("text/html");

@@ -11,11 +11,12 @@ import static com.alextim.domain.User.COLUMN_NAME;
 import static com.alextim.domain.User.TABLE;
 
 @Entity @Table(name = TABLE, uniqueConstraints= @UniqueConstraint(columnNames={COLUMN_NAME}))
-@Data @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(exclude = {"id", "address", "phones", "creationDate"}) @ToString()
+@Data @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(exclude = {"id", "roles", "address", "phones", "creationDate"}) @ToString(exclude = {"id", "address", "phones", "cryptPassword"})
 public class User implements DataSet {
 
     public static final String TABLE = "User";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_GENDER = "gender";
     public static final String COLUMN_CREATION_DATE = "creationDate";
     public static final String COLUMN_ADDRESS_ID = "address_id";
@@ -25,6 +26,13 @@ public class User implements DataSet {
 
     @Column(name = COLUMN_NAME)
     private String name;
+
+    @Column(name = COLUMN_PASSWORD)
+    private String cryptPassword;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Singular
+    private List<String> roles;
 
     @Column(name = COLUMN_GENDER) @Enumerated(EnumType.STRING)
     private Gender gender;

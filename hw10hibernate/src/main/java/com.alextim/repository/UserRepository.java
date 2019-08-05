@@ -1,5 +1,6 @@
 package com.alextim.repository;
 
+import com.alextim.domain.Phone;
 import com.alextim.domain.User;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public interface UserRepository extends AutoCloseable {
     List<User> getAll(int page, int amountByOnePage);
 
     User findById(long id);
+    List<Phone> getPhonesByUser(User user);
     List<User> findByName(String name);
     User findUserByStreet(String street);
     List<User> getUsersByPhoneNumber(String number);

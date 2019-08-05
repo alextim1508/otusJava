@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class UserRepositoryImplTest {
 
@@ -35,6 +36,10 @@ public class UserRepositoryImplTest {
         User byId = repo.findById(user.getId());
 
         Assertions.assertEquals(user, byId);
+
+        List<Phone> phones = repo.getPhonesByUser(byId);
+        Assertions.assertTrue(phones.contains(new Phone("num1")));
+        Assertions.assertTrue(phones.contains(new Phone("num2")));
     }
 
     @Test

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create user</title>
+</head>
+<body>
+
+    <form id="create-form" action="/user" method= "post"  accept-charset="utf-8" th:action="@{/user}" th:object="${user}" th:method="post">
+        <h1>New User:</h1>
+
+        <label for="nameId">Name: </label>
+        <input id="nameId" name= "name" type="text" value="name" th:value="${user.name}" />
+        <br>
+
+        <label for="passwordId">Password: </label>
+        <input id="passwordId" type="password" name= "password" th:value="${user.cryptPassword}"/>
+        <br>
+
+        <label for="genderId">Gender: </label>
+        <select id="genderId" name="gender" type="text" th:value="${user.gender}">
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+        </select>
+        <br>
+
+        <label for="addressId">Address: </label>
+        <input id="addressId" name= "address" type="text" th:value="${user.address}"/>
+        <br>
+
+        <label for="phonesId">Phones: </label>
+        <input id="phonesId" name= "phones" type="text" th:value="${user.phones}"/>
+        <br>
+
+       <input type="submit" value="Добавить"/>
+
+    </form>
+
+</body>
+</html>

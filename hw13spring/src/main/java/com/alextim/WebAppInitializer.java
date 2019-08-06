@@ -1,6 +1,5 @@
 package com.alextim;
 
-import com.alextim.config.Config;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

@@ -21,6 +21,7 @@
         <module>hw10hibernate</module>
         <module>hw11myCache</module>
         <module>hw12web</module>
+        <module>hw14thread</module>
     </modules>
 
     <developers>

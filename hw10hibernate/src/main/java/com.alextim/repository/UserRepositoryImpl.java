@@ -61,14 +61,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<Phone> getPhonesByUser(User user) {
         return executeInTransaction(session -> {
-            List<Phone> phones = user.getPhones();
-            phones.forEach(new Consumer<Phone>() {
-                @Override
-                public void accept(Phone phone) {
-                    System.out.println("Id: " + phone.getId());
-                }
-            });
-            return phones;
+            Query query = session.createQuery("select f from Phone f left join f.user u where u.id = ?1");
+            query.setParameter(1, user.getId());
+            return (List<Phone>)query.getResultList();
         });
     }
 

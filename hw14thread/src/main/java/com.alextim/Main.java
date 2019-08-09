@@ -36,7 +36,8 @@ public class Main {
 
     private static void print(String threadName, int i) {
         synchronized(pingPong) {
-            if( (threadName.equals("thread1") && pingPong.flag) ||
+            //while -> spurious wakeup
+            while ( (threadName.equals("thread1") && pingPong.flag) ||
                 (threadName.equals("thread2") && !pingPong.flag) ) {
                 try {
                     pingPong.wait();

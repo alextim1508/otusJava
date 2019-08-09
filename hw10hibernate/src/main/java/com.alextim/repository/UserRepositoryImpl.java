@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
@@ -55,6 +56,20 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(long id) {
         return executeInTransaction(session -> session.get(User.class, id));
+    }
+
+    @Override
+    public List<Phone> getPhonesByUser(User user) {
+        return executeInTransaction(session -> {
+            List<Phone> phones = user.getPhones();
+            phones.forEach(new Consumer<Phone>() {
+                @Override
+                public void accept(Phone phone) {
+                    System.out.println("Id: " + phone.getId());
+                }
+            });
+            return phones;
+        });
     }
 
     @Override
@@ -132,7 +147,7 @@ public class UserRepositoryImpl implements UserRepository {
                 return result;
             }
             catch (Exception e) {
-                System.out.println("Exception:" + e.getMessage());
+                System.out.println("Exception: " + e.getMessage());
                 session.getTransaction().rollback();
                 throw new RuntimeException(e);
             }

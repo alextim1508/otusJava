@@ -21,6 +21,7 @@
         <module>hw10hibernate</module>
         <module>hw11myCache</module>
         <module>hw12web</module>
+        <module>hw13spring</module>
         <module>hw14thread</module>
     </modules>
 
@@ -48,6 +49,8 @@
         <junit4.version>4.13-beta-3</junit4.version>
         <powermock.version>1.7.4</powermock.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
+        <spring.version>5.1.5.RELEASE</spring.version>
+        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
     </properties>
 
     <dependencyManagement>
@@ -152,6 +155,38 @@
                 <version>${jetty.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf</artifactId>
+                <version>${thymeleaf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf-spring5</artifactId>
+                <version>${thymeleaf.version}</version>
+            </dependency>
 
 
         </dependencies>

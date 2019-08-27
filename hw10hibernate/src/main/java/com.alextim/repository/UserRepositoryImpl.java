@@ -3,6 +3,7 @@ package com.alextim.repository;
 import com.alextim.domain.Address;
 import com.alextim.domain.Phone;
 import com.alextim.domain.User;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -58,12 +59,18 @@ public class UserRepositoryImpl implements UserRepository {
         return executeInTransaction(session -> session.get(User.class, id));
     }
 
+
     @Override
     public List<Phone> getPhonesByUser(User user) {
         return executeInTransaction(session -> {
             Query query = session.createQuery("select f from Phone f left join f.user u where u.id = ?1");
             query.setParameter(1, user.getId());
             return (List<Phone>)query.getResultList();
+
+//            User byId = session.get(User.class, user.getId());
+//            List<Phone> phones = byId.getPhones();
+//            Hibernate.initialize(phones);
+//            return phones;
         });
     }
 

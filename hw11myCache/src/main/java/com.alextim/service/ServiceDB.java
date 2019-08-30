@@ -11,7 +11,7 @@ public interface ServiceDB extends AutoCloseable{
     User load(long id);
     List<User> load(String name);
     List<User> loadAll(int page, int amount);
-
+    List<Phone> getPhone(long id);
     void update(long id, String name, User.Gender gender, Address address, List<Phone> phones);
     void remove(long id);
 }

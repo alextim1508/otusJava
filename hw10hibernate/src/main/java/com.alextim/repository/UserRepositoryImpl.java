@@ -61,10 +61,10 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public List<Phone> getPhonesByUser(User user) {
+    public List<Phone> getPhonesByUserId(long id) {
         return executeInTransaction(session -> {
             Query query = session.createQuery("select f from Phone f left join f.user u where u.id = ?1");
-            query.setParameter(1, user.getId());
+            query.setParameter(1, id);
             return (List<Phone>)query.getResultList();
 
 //            User byId = session.get(User.class, user.getId());

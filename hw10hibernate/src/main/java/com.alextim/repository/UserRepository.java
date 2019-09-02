@@ -12,7 +12,7 @@ public interface UserRepository extends AutoCloseable {
     List<User> getAll(int page, int amountByOnePage);
 
     User findById(long id);
-    List<Phone> getPhonesByUser(User user);
+    List<Phone> getPhonesByUserId(long id);
     List<User> findByName(String name);
     User findUserByStreet(String street);
     List<User> getUsersByPhoneNumber(String number);

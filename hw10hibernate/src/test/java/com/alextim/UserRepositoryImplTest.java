@@ -37,7 +37,7 @@ public class UserRepositoryImplTest {
 
         Assertions.assertEquals(user, byId);
 
-        List<Phone> phones = repo.getPhonesByUser(byId);
+        List<Phone> phones = repo.getPhonesByUserId(byId.getId());
         Assertions.assertTrue(phones.contains(new Phone("num1")));
         Assertions.assertTrue(phones.contains(new Phone("num2")));
     }

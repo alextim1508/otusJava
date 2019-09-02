@@ -23,6 +23,7 @@
         <module>hw12web</module>
         <module>hw13spring</module>
         <module>hw14thread</module>
+        <module>hw15messageSystem</module>
     </modules>
 
     <developers>

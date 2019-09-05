@@ -24,6 +24,7 @@
         <module>hw13spring</module>
         <module>hw14thread</module>
         <module>hw15messageSystem</module>
+        <module>hw16multiprocess</module>
     </modules>
 
     <developers>
@@ -52,6 +53,7 @@
         <jetty.version>9.4.19.v20190610</jetty.version>
         <spring.version>5.1.5.RELEASE</spring.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <jcommander.version>1.78</jcommander.version>
     </properties>
 
     <dependencyManagement>
@@ -189,6 +191,11 @@
                 <version>${thymeleaf.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.beust</groupId>
+                <artifactId>jcommander</artifactId>
+                <version>${jcommander.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

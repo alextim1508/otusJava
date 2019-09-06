@@ -4,37 +4,35 @@ import com.alextim.messages.*;
 
 public class SocketMessageServerImpl extends SocketMessageServer {
 
-    private LoadBalancer balancer = new LoadBalancer();
+    LoadBalancer balancer = new LoadBalancer();
 
     @Override
     public Message handlerMessage(Message message, String id) {
 
         if(message instanceof RegistrationMessage) {
             RegistrationMessage registrationMessage = (RegistrationMessage)message;
-            setClientId(id, IdClient.valueOf(registrationMessage.getId()));
-            return new OkMessage();
+            setClientId(id, IdClient.valueOf(registrationMessage.getWaitingAnswerId()));
+            return new OkMessage(ID);
         }
         else if(message instanceof SaveUserMassage) {
             if(IdClient.isFrontendId(id)) {
-                IdClient idBackendClient = balancer.getBackendId();
-                sendMessageToClientById(message, idBackendClient.toString());
-                balancer.requestBackendCountInc(idBackendClient);
-                return new OkMessage();
+                IdClient backendId = balancer.getBackendId();
+                sendMessageToClientById(message, backendId.toString());
+                balancer.requestBackendCountInc(backendId);
+                return new OkMessage(ID);
             }
             else {
-                return new UnknownMessage();
+                return new UnknownMessage(ID);
             }
         }
         else if(message instanceof SavedUserMassage) {
             SavedUserMassage savedUserMassage = (SavedUserMassage)message;
             if(IdClient.isBackendId(id)) {
-                IdClient idFrontendClient = balancer.getFrontendId();
-                sendMessageToClientById(new ShowUserMessage(savedUserMassage.getUser()), idFrontendClient.toString());
-                balancer.requestFrontendCountInc(idFrontendClient);
-                return new OkMessage();
+                sendMessageToClientById(new ShowUserMessage(savedUserMassage.getUser(), ID), savedUserMassage.getWaitingAnswerId());
+                return new OkMessage(ID);
             }
             else {
-                return new UnknownMessage();
+                return new UnknownMessage(ID);
             }
         }
         else if(message instanceof ShownUserMessage) {
@@ -42,37 +40,33 @@ public class SocketMessageServerImpl extends SocketMessageServer {
         }
         else if(message instanceof GetAllUsersMessage) {
             if(IdClient.isFrontendId(id)) {
-                IdClient idBackendClient = balancer.getBackendId();
-                sendMessageToClientById(message, idBackendClient.toString());
-                balancer.requestBackendCountInc(idBackendClient);
-                return new OkMessage();
+                IdClient backendId = balancer.getBackendId();
+                sendMessageToClientById(message, backendId.toString());
+                balancer.requestBackendCountInc(backendId);
+                return new OkMessage(ID);
             }
             else {
-                return new UnknownMessage();
+                return new UnknownMessage(ID);
             }
         }
         else if(message instanceof UsersMessage) {
             UsersMessage usersMessage = (UsersMessage)message;
             if(IdClient.isBackendId(id)) {
-                IdClient idFrontendClient = balancer.getFrontendId();
-                sendMessageToClientById(new ShowUsersMessage(usersMessage.getUsers()), idFrontendClient.toString());
-                balancer.requestFrontendCountInc(idFrontendClient);
-                return new OkMessage();
+                sendMessageToClientById(new ShowUsersMessage(usersMessage.getUsers(), ID), message.getWaitingAnswerId());
+                return new OkMessage(ID);
             }
             else {
-                return new UnknownMessage();
+                return new UnknownMessage(ID);
             }
         }
         else if(message instanceof ErrorMessage) {
             ErrorMessage errorMessage = (ErrorMessage)message;
             if(IdClient.isBackendId(id)) {
-                IdClient idFrontendClient = balancer.getFrontendId();
-                sendMessageToClientById(new ShowErrorMessage(errorMessage.getMessageException()), idFrontendClient.toString() );
-                balancer.requestFrontendCountInc(idFrontendClient);
-                return new OkMessage();
+                sendMessageToClientById(new ShowErrorMessage(errorMessage.getMessageException(), ID), ((ErrorMessage) message).getMessageException());
+                return new OkMessage(ID);
             }
             else {
-                return new UnknownMessage();
+                return new UnknownMessage(ID);
             }
         }
         else if(message instanceof ShownErrorMessage) {
@@ -82,6 +76,6 @@ public class SocketMessageServerImpl extends SocketMessageServer {
             return null;
         }
 
-        return new UnknownMessage();
+        return new UnknownMessage(ID);
     }
 }

@@ -1,7 +1,8 @@
 package com.alextim.messages;
 
 public class ShownErrorMessage extends Message {
-    public ShownErrorMessage() {
-        super(ShownErrorMessage.class);
+
+    public ShownErrorMessage(String waitingAnswerId) {
+        super(ShownErrorMessage.class, waitingAnswerId);
     }
 }

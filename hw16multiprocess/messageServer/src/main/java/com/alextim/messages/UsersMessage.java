@@ -8,8 +8,8 @@ import java.util.List;
 public class UsersMessage extends Message {
     private List<UserDto> users;
 
-    public UsersMessage(List<UserDto> users) {
-        super(UsersMessage.class);
+    public UsersMessage(List<UserDto> users, String waitingAnswerId) {
+        super(UsersMessage.class, waitingAnswerId);
         this.users = users;
     }
 }

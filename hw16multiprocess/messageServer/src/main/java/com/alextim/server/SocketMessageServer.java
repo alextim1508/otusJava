@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public abstract class SocketMessageServer implements SocketMessageServerMBean {
+    String ID = "Server";
+
     private static final int THREADS_COUNT = 1;
     private static final int PORT = 5050;
     private static final int DELAY_MS = 500;
@@ -36,7 +38,7 @@ public abstract class SocketMessageServer implements SocketMessageServerMBean {
         try (ServerSocket serverSocket = new ServerSocket(PORT)){
             while(!executorService.isShutdown()){
                 Socket socket = serverSocket.accept();
-                SocketMessageWorker worker = new SocketMessageWorker("Server", socket);
+                SocketMessageWorker worker = new SocketMessageWorker(ID, socket);
                 worker.init();
                 workers.put(worker.getRemoteSocketAddress(), worker);
             }

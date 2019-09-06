@@ -3,7 +3,7 @@ package com.alextim.messages;
 
 public class GetAllUsersMessage extends Message {
 
-    public GetAllUsersMessage() {
-        super(GetAllUsersMessage.class);
+    public GetAllUsersMessage(String waitingAnswerId) {
+        super(GetAllUsersMessage.class, waitingAnswerId);
     }
 }

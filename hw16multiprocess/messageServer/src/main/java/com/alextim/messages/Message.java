@@ -12,7 +12,10 @@ public class Message implements Serializable {
 
     private String className;
 
-    public Message(Class<?> cl) {
+    private String waitingAnswerId;
+
+    public Message(Class<?> cl, String waitingAnswerId) {
        className = cl.getName();
+       this.waitingAnswerId = waitingAnswerId;
     }
 }

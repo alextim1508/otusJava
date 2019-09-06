@@ -44,10 +44,10 @@ public class DBServiceSocketMessageClient extends SocketMessageClient{
                 serviceDB.save(user);
             }
             catch (RuntimeException e) {
-                return new ErrorMessage(e.getMessage());
+                return new ErrorMessage(e.getMessage(), ID);
             }
             UserDto userDto = UserDto.toUserDto(user);
-            return new SavedUserMassage(userDto);
+            return new SavedUserMassage(userDto, message.getWaitingAnswerId());
         }
         else if(message instanceof GetAllUsersMessage) {
             List<User> users;
@@ -56,16 +56,16 @@ public class DBServiceSocketMessageClient extends SocketMessageClient{
                 users.forEach((user) -> user.setPhones(serviceDB.getPhone(user.getId())));
             }
             catch (RuntimeException e) {
-                return new ErrorMessage(e.getMessage());
+                return new ErrorMessage(e.getMessage(), ID);
             }
             List<UserDto> usersDto =  users.stream().map(UserDto::toUserDto).collect(Collectors.toList());
-            return new UsersMessage(usersDto);
+            return new UsersMessage(usersDto, message.getWaitingAnswerId());
         }
         else if(message instanceof OkMessage) {
             log.info("{}: Message Ok!", ID);
             return null;
         }
         else
-            return new UnknownMessage();
+            return new UnknownMessage(ID);
     }
 }

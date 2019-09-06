@@ -8,8 +8,8 @@ public class ShowUserMessage extends Message {
 
     private UserDto user;
 
-    public ShowUserMessage(UserDto user) {
-        super(ShowUserMessage.class);
+    public ShowUserMessage(UserDto user, String waitingAnswerId) {
+        super(ShowUserMessage.class, waitingAnswerId);
         this.user = user;
     }
 }

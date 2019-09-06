@@ -1,12 +1,8 @@
 package com.alextim;
 
 import com.alextim.client.SocketMessageClient;
-import com.alextim.messages.Message;
-import com.alextim.messages.PingMessage;
 import com.alextim.messages.RegistrationMessage;
-import com.alextim.server.IdClient;
 import com.alextim.service.FrontendService;
-import com.alextim.service.FrontendServiceImpl;
 import com.alextim.socket.FrontendSocketMessageClient;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;

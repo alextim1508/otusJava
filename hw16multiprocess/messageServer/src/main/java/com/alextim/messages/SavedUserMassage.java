@@ -1,6 +1,5 @@
 package com.alextim.messages;
 
-import com.alextim.domain.User;
 import lombok.Data;
 
 @Data
@@ -8,8 +7,8 @@ public class SavedUserMassage extends Message {
 
     private UserDto user;
 
-    public SavedUserMassage(UserDto user) {
-        super(SavedUserMassage.class);
+    public SavedUserMassage(UserDto user, String waitingAnswerId) {
+        super(SavedUserMassage.class, waitingAnswerId);
         this.user = user;
     }
 }

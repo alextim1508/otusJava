@@ -6,8 +6,8 @@ import lombok.Data;
 public class SaveUserMassage extends Message {
     private UserDto user;
 
-    public SaveUserMassage(UserDto user) {
-        super(SaveUserMassage.class);
+    public SaveUserMassage(UserDto user, String waitingAnswerId) {
+        super(SaveUserMassage.class, waitingAnswerId);
         this.user = user;
     }
 }

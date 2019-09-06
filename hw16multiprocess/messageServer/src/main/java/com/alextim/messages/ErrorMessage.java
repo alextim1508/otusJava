@@ -6,8 +6,8 @@ import lombok.Data;
 public class ErrorMessage extends Message {
     private String messageException;
 
-    public ErrorMessage(String messageException) {
-        super(ErrorMessage.class);
+    public ErrorMessage(String messageException, String waitingAnswerId) {
+        super(ErrorMessage.class, waitingAnswerId);
         this.messageException = messageException;
     }
 }

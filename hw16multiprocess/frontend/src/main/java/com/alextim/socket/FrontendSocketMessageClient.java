@@ -27,24 +27,24 @@ public class FrontendSocketMessageClient extends SocketMessageClient {
             ShowUserMessage showSavedUserMessage = (ShowUserMessage)message;
             User user = com.alextim.messages.UserDto.toUser(showSavedUserMessage.getUser());
             frontendService.addedUser(user);
-            return new ShownUserMessage();
+            return new ShownUserMessage(ID);
         }
         else if(message instanceof ShowUsersMessage) {
             ShowUsersMessage showUsersMessage = (ShowUsersMessage)message;
             List<User> users = showUsersMessage.getUsers().stream().map(com.alextim.messages.UserDto::toUser).collect(Collectors.toList());
             frontendService.allUsers(users);
-            return new ShownUserMessage();
+            return new ShownUserMessage(ID);
         }
         else if(message instanceof ShowErrorMessage) {
             ShowErrorMessage showErrorMessage = (ShowErrorMessage)message;
             frontendService.errorHandler(new RuntimeException(showErrorMessage.getMessageException()));
-            return new ShownErrorMessage();
+            return new ShownErrorMessage(ID);
         }
         else if(message instanceof OkMessage) {
             log.info("{}: Message Ok!", ID);
             return null;
         }
         else
-            return new UnknownMessage();
+            return new UnknownMessage(ID);
     }
 }

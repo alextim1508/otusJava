@@ -1,6 +1,5 @@
 package com.alextim.messages;
 
-import com.alextim.domain.User;
 import lombok.Data;
 
 import java.util.List;
@@ -10,8 +9,8 @@ public class ShowUsersMessage extends Message{
 
     private List<UserDto> users;
 
-    public ShowUsersMessage(List<UserDto> users) {
-        super(ShowUsersMessage.class);
+    public ShowUsersMessage(List<UserDto> users, String waitingAnswerId) {
+        super(ShowUsersMessage.class, waitingAnswerId);
         this.users = users;
     }
 }

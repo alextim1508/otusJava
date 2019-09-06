@@ -27,7 +27,7 @@ public class UserController {
         com.alextim.messages.UserDto userDtoForMessage
                 = com.alextim.messages.UserDto.toUserDto(user);
 
-        client.sendMessage(new SaveUserMassage(userDtoForMessage));
+        client.sendMessage(new SaveUserMassage(userDtoForMessage, client.getID()));
         return new MessageDto("Ok");
     }
 
@@ -35,7 +35,7 @@ public class UserController {
     @SendTo("/topic/response3")
     public MessageDto getUsers() {
         log.info("GetUsers");
-        client.sendMessage(new GetAllUsersMessage());
+        client.sendMessage(new GetAllUsersMessage(client.getID()));
         return new MessageDto("Ok");
     }
 

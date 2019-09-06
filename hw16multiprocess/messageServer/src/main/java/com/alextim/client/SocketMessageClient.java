@@ -36,11 +36,12 @@ public abstract class SocketMessageClient {
 
     private static void initFields(Object object, String[] args) {
         JCommander jCommander = new JCommander(object);
+        jCommander.setAcceptUnknownOptions(true);
         try {
             jCommander.parse(args);
         }
         catch (ParameterException e) {
-            log.info("jCommander error: {}", e.getMessage());
+            log.error("jCommander error: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

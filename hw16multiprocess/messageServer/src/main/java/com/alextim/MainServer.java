@@ -16,8 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 public class MainServer {
 
-    private static final String CLIENT_FRONTEND_START_COMMAND = String.format("java -jar ./hw16multiprocess/frontend/target/frontend.jar -host localhost -port 5050 -id %s", IdClient.FRONTEND.toString());
-    private static final String CLIENT_BD_SERVICE_START_COMMAND = String.format("java -jar ./hw16multiprocess/dataBaseServer/target/dataBaseServer.jar -host localhost -port 5050 -id %s", IdClient.BACKEND.toString());
+    private static final String CLIENT_FRONTEND_START_COMMAND_1 = String.format("java -jar ./hw16multiprocess/frontend/target/frontend.jar --server.port=%d -host localhost -port 5050 -id %s", 8090, IdClient.FRONTEND_1.toString());
+    private static final String CLIENT_FRONTEND_START_COMMAND_2 = String.format("java -jar ./hw16multiprocess/frontend/target/frontend.jar --server.port=%d -host localhost -port 5050 -id %s", 8080, IdClient.FRONTEND_2.toString());
+    private static final String CLIENT_BD_SERVICE_START_COMMAND_1 = String.format("java -jar ./hw16multiprocess/dataBaseServer/target/dataBaseServer.jar -host localhost -port 5050 -id %s", IdClient.BACKEND_1.toString());
+    private static final String CLIENT_BD_SERVICE_START_COMMAND_2 = String.format("java -jar ./hw16multiprocess/dataBaseServer/target/dataBaseServer.jar -host localhost -port 5050 -id %s", IdClient.BACKEND_2.toString());
     private static final int CLIENT_START_DELAY_SEC = 2;
 
     public static void main( String[] args ) throws Exception {
@@ -27,9 +29,11 @@ public class MainServer {
     private void start() throws Exception {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-        startClient(executorService, CLIENT_FRONTEND_START_COMMAND);
+        startClient(executorService, CLIENT_FRONTEND_START_COMMAND_1);
+        startClient(executorService, CLIENT_FRONTEND_START_COMMAND_2);
 
-        startClient(executorService, CLIENT_BD_SERVICE_START_COMMAND);
+        startClient(executorService, CLIENT_BD_SERVICE_START_COMMAND_1);
+        startClient(executorService, CLIENT_BD_SERVICE_START_COMMAND_2);
 
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         ObjectName objectName = new ObjectName("com.alextim:type=Server");

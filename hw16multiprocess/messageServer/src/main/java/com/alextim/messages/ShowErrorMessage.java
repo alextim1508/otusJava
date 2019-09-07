@@ -1,8 +1,9 @@
 package com.alextim.messages;
 
 import lombok.Data;
+import lombok.ToString;
 
-@Data
+@Data @ToString(callSuper = true)
 public class ShowErrorMessage extends Message {
     private String messageException;
 

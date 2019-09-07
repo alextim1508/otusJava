@@ -1,17 +1,13 @@
 package com.alextim.socket;
 
-import com.alextim.cache.MyCache;
 import com.alextim.client.SocketMessageClient;
 import com.alextim.domain.User;
 import com.alextim.messages.*;
-import com.alextim.repository.UserRepositoryImpl;
 import com.alextim.service.ServiceDB;
-import com.alextim.service.ServiceDbImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,20 +15,9 @@ public class DBServiceSocketMessageClient extends SocketMessageClient{
 
     private final ServiceDB serviceDB;
 
-    public DBServiceSocketMessageClient(ServiceDB serviceDB, String[] args) throws IOException {
+    public DBServiceSocketMessageClient(ServiceDB serviceDB, String... args) throws IOException {
         super(args);
         this.serviceDB = serviceDB;
-    }
-
-    public static void main(String[] args ) throws IOException {
-        DBServiceSocketMessageClient client
-                = new DBServiceSocketMessageClient(
-                        new ServiceDbImpl(new UserRepositoryImpl(),  new MyCache<>(10,
-                TimeUnit.SECONDS.toMillis(1),
-                TimeUnit.SECONDS.toMillis(1))), args);
-        client.start();
-
-        client.sendMessage(new RegistrationMessage(client.getID()));
     }
 
     @Override

@@ -1,10 +1,11 @@
 package com.alextim.messages;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
-@Data
+@Data @ToString(callSuper = true)
 public class UsersMessage extends Message {
     private List<UserDto> users;
 

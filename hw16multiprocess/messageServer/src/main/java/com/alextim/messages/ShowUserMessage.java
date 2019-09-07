@@ -1,9 +1,9 @@
 package com.alextim.messages;
 
-import com.alextim.domain.User;
 import lombok.Data;
+import lombok.ToString;
 
-@Data
+@Data @ToString(callSuper = true)
 public class ShowUserMessage extends Message {
 
     private UserDto user;

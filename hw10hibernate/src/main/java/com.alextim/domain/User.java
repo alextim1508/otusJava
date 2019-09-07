@@ -11,7 +11,7 @@ import static com.alextim.domain.User.COLUMN_NAME;
 import static com.alextim.domain.User.TABLE;
 
 @Entity @Table(name = TABLE, uniqueConstraints= @UniqueConstraint(columnNames={COLUMN_NAME}))
-@Data @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(exclude = {"id", "roles", "address", "phones", "creationDate"}) @ToString(exclude = {"id", "address", "phones", "cryptPassword"})
+@Data @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(exclude = {"id", "roles", "address", "phones", "creationDate"}) @ToString(exclude = {"address", "phones", "cryptPassword"})
 public class User implements DataSet {
 
     public static final String TABLE = "User";

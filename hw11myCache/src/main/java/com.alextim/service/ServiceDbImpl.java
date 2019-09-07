@@ -22,7 +22,7 @@ public class ServiceDbImpl implements ServiceDB {
     private final Cache<User> cache;
 
     @Override
-    public void save(User user) {
+    public User save(User user) {
         log.info("Save: {}", user);
         try {
             repo.insert(user);
@@ -31,6 +31,7 @@ public class ServiceDbImpl implements ServiceDB {
         catch(Exception exception) {
             handlerException(exception, user.toString());
         }
+        return user;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class ServiceDbImpl implements ServiceDB {
     }
 
     @Override
-    public void update(long id, String name, User.Gender gender, Address address, List<Phone> phones) {
+    public User update(long id, String name, User.Gender gender, Address address, List<Phone> phones) {
         User user = User.builder()
                 .name(name)
                 .gender(gender)
@@ -79,6 +80,7 @@ public class ServiceDbImpl implements ServiceDB {
         cache.remove(CacheKey.buildKey(User.class, id));
         repo.update(id, user);
         cache.put(CacheKey.buildKey(user), user);
+        return user;
     }
 
     @Override

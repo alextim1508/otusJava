@@ -6,6 +6,7 @@ import com.alextim.domain.User;
 import com.alextim.messageSystem.Address;
 import com.alextim.messageSystem.MessageSystem;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,15 @@ import java.util.stream.Collectors;
 import static com.alextim.controller.UserDto.toUserDto;
 
 @Service
-@Data @RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class FrontendMessageSystemClientImpl implements FrontendServiceMessageSystemClient {
 
-    @Autowired
-    private SimpMessagingTemplate webSocket;
+    private final SimpMessagingTemplate webSocket;
 
+    @Getter
     private final Address address = new Address("Frontend");
 
+    @Getter
     private final MessageSystem messageSystem;
 
     @Override

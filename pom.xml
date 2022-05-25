@@ -51,7 +51,7 @@
         <junit4.version>4.13-beta-3</junit4.version>
         <powermock.version>1.7.4</powermock.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
-        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <jcommander.version>1.78</jcommander.version>
     </properties>
